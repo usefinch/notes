@@ -9,7 +9,7 @@ Edit your live site in the browser, then let Claude make the changes in your cod
 In Claude Code:
 
 ```
-/plugin marketplace add finchnotes/finch
+/plugin marketplace add usefinch/notes
 ```
 
 ```
