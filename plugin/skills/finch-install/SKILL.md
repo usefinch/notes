@@ -65,7 +65,14 @@ Run the following checks in order, stopping at the first match:
 If a name wasn't supplied as an argument and you can't derive a clear one, ask:
 > What should this project be called in the Finch dashboard?
 
-Derive from the current directory name as the default suggestion. Ask nothing else here — reviewers sign in with Google to suggest changes, and there are no access settings yet.
+Derive from the current directory name as the default suggestion.
+
+**Then one more question — is this a live production site?** Ask it with `AskUserQuestion`:
+> Should Finch show to everyone who visits, or only to people you send a review link?
+> 1. Everyone — a prototype, staging or preview site (default)
+> 2. Only with a review link — a live production site; visitors never see Finch
+
+Remember the answer as **show**: `always` for 1, `link` for 2. Ask nothing else — reviewers sign in with Google to suggest changes, and there are no access settings yet.
 
 ---
 
@@ -142,6 +149,8 @@ The config+script block to inject is always:
 </script>
 <script src="https://finchnotes.co/finch.js"></script>
 ```
+
+**If show is `link`** (Step 3), add `show: 'link',` on its own line right after `mode: 'live',` — in whichever framework's snippet below you use. Finch then stays hidden (no download, nothing on the page) until someone opens the site with `?finch` on the end of the URL; the owner is remembered on their device after that, and **Hide Finch on this site** in the panel's account menu puts it away again. Leave the line out for `always`.
 
 `mode: 'live'` turns on editing on the page: the owner sees **Edit this page** (and the Edit / Changes / History pill on the right edge) and can change copy, colours, spacing and layout, then press **Apply changes**; everyone else can suggest changes and leave notes. Replace `{live}` with:
 
@@ -337,12 +346,21 @@ Add a project permission so the Finch tools never prompt in this repo. Read `.cl
 ```json
 {
   "permissions": {
-    "allow": ["mcp__plugin_finch_finch__*"]
+    "allow": ["mcp__plugin_finch_finch__*"],
+    "ask": [
+      "Edit(/package.json)", "Edit(/package-lock.json)", "Edit(/pnpm-lock.yaml)", "Edit(/yarn.lock)",
+      "Edit(/.finch)", "Edit(/.github/**)", "Edit(**/.env*)",
+      "Edit(/vercel.json)", "Edit(/netlify.toml)", "Edit(/ample.toml)",
+      "Edit(**/next.config.*)", "Edit(**/vite.config.*)", "Edit(**/nuxt.config.*)", "Edit(**/astro.config.*)",
+      "Edit(**/svelte.config.*)", "Edit(**/webpack.config.*)", "Edit(**/postcss.config.*)", "Edit(**/babel.config.*)"
+    ]
   }
 }
 ```
 
-Write it with the Write/Edit tools (create `.claude/` if needed). Claude Code shows this rule in its trust prompt the next time the folder is opened; that one approval covers every Finch tool call from then on.
+The `ask` rules are the safety net for `/finch-apply`: ordinary changes to pages, styles and copy still go through with no prompt, but a change to the package file, build or deploy config, environment files or CI stops and asks the owner first. Reviewers' text can't talk Claude out of this, because Claude Code enforces it, not the model. Merge them into any existing `ask` list; don't remove rules the project already has. (Git and `.claude/` are protected by Claude Code already.)
+
+Write it with the Write/Edit tools (create `.claude/` if needed). Claude Code shows these rules in its trust prompt the next time the folder is opened; that one approval covers every Finch tool call from then on.
 
 **API key check:** Step 1 already made sure `~/.finch/credentials` has a key. If it reported `apiKey: created`, the user must reconnect **finch** from `/mcp` (or open a new session) before `/finch-apply` will see the Finch tools — say so in the report.
 
@@ -419,6 +437,8 @@ Next steps:
   3. Click Apply changes, then come back here and run /finch-apply.
      Claude makes the changes, deploys, and the page reloads into the live site.
 ```
+
+If show is `link`, add a line `Shows: only with a review link (visitors never see Finch)` to the summary, and make next step 1 "Open https://my-app.ample.run/?finch and click Edit on the right edge — the ?finch is what shows Finch; send that same link to anyone you want feedback from (or copy it from finchnotes.co/app)."
 
 If Step 1 created the API key, add before the next steps: "Reconnect **finch** from `/mcp` (or open a new session) so `/finch-apply` can see your Finch tools." If the site wasn't deployed (no `ample.toml`), step 1 becomes "Deploy the site the way you usually do, then open it…".
 

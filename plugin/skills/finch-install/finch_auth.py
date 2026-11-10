@@ -56,6 +56,16 @@ def load_json(path):
         return None
 
 
+def computer_label():
+    # Shown in the dashboard's "Connected computers" list so the owner can tell
+    # their machines apart (e.g. "Sams-MacBook-Air").
+    try:
+        name = socket.gethostname().split('.')[0].strip()
+    except Exception:
+        name = ''
+    return (name or 'A computer')[:60]
+
+
 def refresh(session):
     if not session or not session.get('refresh_token'):
         return None
@@ -151,7 +161,7 @@ def main():
         status, data = request('POST', '/rest/v1/api_keys', token=session['access_token'],
                                body={'owner_id': user['id'],
                                      'key_hash': hashlib.sha256(raw.encode()).hexdigest(),
-                                     'label': 'Claude Code (finch-install)'},
+                                     'label': computer_label()},
                                extra={'Prefer': 'return=minimal'})
         if status not in (200, 201, 204):
             sys.exit(f'Could not create a Finch API key ({status}): {data}')
