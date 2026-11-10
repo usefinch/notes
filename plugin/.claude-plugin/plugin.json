@@ -1,0 +1,11 @@
+{
+  "name": "finch",
+  "version": "0.3.5",
+  "description": "Finch visual feedback for Claude Code: set a prototype up for comments and visual edits (/finch-install), and apply the changes queued from Finch's Apply button (/finch-apply). Connects to the hosted Finch MCP server.",
+  "author": {
+    "name": "Finch",
+    "url": "https://finchnotes.co"
+  },
+  "homepage": "https://finchnotes.co",
+  "keywords": ["feedback", "review", "design", "prototype", "visual-edits"]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "finch",
+  "owner": {
+    "name": "Finch",
+    "url": "https://finchnotes.co"
+  },
+  "metadata": {
+    "description": "Finch — visual feedback and visual edits for prototypes, closed back into Claude Code."
+  },
+  "plugins": [
+    {
+      "name": "finch",
+      "source": "./plugin",
+      "description": "Finch visual feedback: /finch-install sets a prototype up for comments and visual edits; /finch-apply applies the changes queued from Finch's Apply button."
+    }
+  ]
+}
