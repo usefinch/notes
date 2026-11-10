@@ -60,27 +60,12 @@ Run the following checks in order, stopping at the first match:
 
 ---
 
-## Step 3 — Ask config questions
+## Step 3 — Project name
 
-Ask the user the following. Use `AskUserQuestion` for clean option pickers where relevant:
-
-**a. Project name** — if not supplied as an argument and you can't derive a clear name:
+If a name wasn't supplied as an argument and you can't derive a clear one, ask:
 > What should this project be called in the Finch dashboard?
 
-Derive from the current directory name as the default suggestion.
-
-**b. Who can leave comments?** (`comment_auth`)
-> Who should be able to leave comments on your prototype?
-> 1. Anyone (no sign-in required) — default, zero friction for reviewers
-> 2. Google sign-in required
-> 3. Invited users only
-
-**c. Visibility** (`visibility`)
-> Who can view threads in the Finch dashboard?
-> 1. Public — anyone with the project URL can view threads
-> 2. Private — only you (the project owner) can view threads
-
-Default answers: anyone / public. If the user just wants to proceed without configuring, accept the defaults.
+Derive from the current directory name as the default suggestion. Ask nothing else here — reviewers sign in with Google to suggest changes, and there are no access settings yet.
 
 ---
 
@@ -131,10 +116,8 @@ curl -s -X POST \
   -d '{
     "name": "{projectName}",
     "prototype_id": "{prototypeId}",
-    "owner_id": "{user_id}",
     "base_url": "{base_url_or_null}",
-    "comment_auth": "{comment_auth}",
-    "visibility": "{visibility}"
+    "owner_id": "{user_id}"
   }'
 ```
 
@@ -423,7 +406,6 @@ Framework: Next.js App Router
 
 Project: "My App" (a3f9b2c1-4d5e-6f7a-8b9c-0d1e2f3a4b5c) — created ✓
 Live editing: on — you're the owner ("Sam")
-Comment auth: anyone · Visibility: public
 
 Script injected into: src/app/layout.tsx ✓
 Config written: .finch ✓
@@ -450,4 +432,3 @@ If anything failed (e.g. project creation errored, no HTML file found), report t
 - Use the Read and Edit tools for file modifications; Write for new files.
 - If `.finch` already exists (re-running the skill), skip project creation and config writing; only re-inject the script tag if missing, add `mode: 'live'` if it's missing, and still run Steps 9–10.
 - The API key is never written into the project. The plugin's Finch connection reads it from `~/.finch/credentials` (saved by Step 1) each time it connects, falling back to a `FINCH_API_KEY` environment variable. Don't tell users to export it in their shell — the desktop app doesn't load shell profiles.
-- `comment_auth` and `visibility` are stored on the project but not enforced by the overlay yet (enforcement is Phase 7). Setting them now means no migration needed later.
