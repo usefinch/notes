@@ -11,7 +11,7 @@
     {
       "name": "finch",
       "source": "./plugin",
-      "description": "Finch visual feedback: /finch-install sets a prototype up for comments and visual edits; /finch-apply applies the changes queued from Finch's Apply button."
+      "description": "Finch visual feedback: /finch-install sets a prototype up for comments and visual edits; /finch-apply applies the changes queued from Finch's Apply button; /finch-uninstall takes it off again."
     }
   ]
 }

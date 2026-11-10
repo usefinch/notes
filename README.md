@@ -24,10 +24,13 @@ Then start a new session in your project.
 2. **Open your live site** and click **Edit** on the right edge. Make changes, or type what you'd change.
 3. **Click Apply changes**, then run **`/finch-apply`** in Claude Code. Claude applies everything, deploys, and the page reloads into the live site.
 
+To take Finch off a project, run **`/finch-uninstall`**. It removes the script and config, and asks whether to delete the site from Finch and disconnect your computer too.
+
 ## What's in here
 
 - `plugin/skills/finch-install` — sets Finch up in a project
 - `plugin/skills/finch-apply` — applies the changes queued from the Apply button
+- `plugin/skills/finch-uninstall` — takes Finch off a project
 - `plugin/.mcp.json` — connects Claude Code to the hosted Finch server, using the key `/finch-install` saves to `~/.finch/credentials`
 
 Questions or problems: [finchnotes.co](https://finchnotes.co)
