@@ -5,13 +5,13 @@
     "url": "https://finchnotes.co"
   },
   "metadata": {
-    "description": "Finch: edit your live site in the browser, then let Claude make the changes in your code."
+    "description": "Finch lets people suggest edits right on your live website; you approve them, and Claude Code puts them live."
   },
   "plugins": [
     {
       "name": "finch",
       "source": "./plugin",
-      "description": "Edit your live site in the browser, then let Claude make the changes in your code. /finch-install puts Finch on your site, /finch-apply ships the changes you approved, /finch-uninstall takes it off again."
+      "description": "Finch lets people suggest edits right on your live website; you approve them, and Claude Code puts them live. /finch-install puts Finch on your site, /finch-apply ships the changes you approved, /finch-uninstall takes it off again."
     }
   ]
 }

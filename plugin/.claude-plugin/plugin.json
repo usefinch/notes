@@ -1,8 +1,8 @@
 {
   "name": "finch",
   "displayName": "Finch",
-  "version": "0.3.10",
-  "description": "Edit your live site in the browser, then let Claude make the changes in your code. /finch-install puts Finch on your site, /finch-apply makes the changes you approved on a branch, merges, deploys and reports back, and /finch-uninstall takes Finch off again. Connects to the hosted Finch server.",
+  "version": "0.3.11",
+  "description": "Finch lets people suggest edits right on your live website; you approve them, and Claude Code puts them live. /finch-install puts Finch on your site, /finch-apply makes the changes you approved on a branch, merges, deploys and reports back, and /finch-uninstall takes Finch off again.",
   "author": {
     "name": "Finch",
     "email": "hello@finchnotes.co",
@@ -10,7 +10,14 @@
   },
   "homepage": "https://finchnotes.co",
   "repository": "https://github.com/usefinch/notes",
-  "keywords": ["feedback", "review", "design", "visual-editing", "website", "deploy"],
+  "keywords": [
+    "feedback",
+    "review",
+    "design",
+    "visual-editing",
+    "website",
+    "deploy"
+  ],
   "icon": "./logo.png",
   "documentationUrl": "https://github.com/usefinch/notes#readme",
   "supportUrl": "https://finchnotes.co/support",

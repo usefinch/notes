@@ -1,6 +1,6 @@
 # Finch for Claude Code
 
-Edit your live site in the browser, then let Claude make the changes in your code.
+Finch lets people suggest edits right on your live website; you approve them, and Claude Code puts them live.
 
 [Finch](https://finchnotes.co) puts an **Edit** button on your deployed site. Change text, colours, spacing and layout right on the page, or just type what you want different. Press **Apply changes**, run `/finch-apply` in Claude Code, and Claude makes each change on a branch, merges it, deploys, and your page reloads into the live version. People you share the site with can suggest changes too; you approve the ones you want.
 
