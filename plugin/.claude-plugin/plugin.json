@@ -1,11 +1,19 @@
 {
   "name": "finch",
-  "version": "0.3.9",
-  "description": "Finch visual feedback for Claude Code: set a prototype up for comments and visual edits (/finch-install), apply the changes queued from Finch's Apply button (/finch-apply), and take Finch off a project again (/finch-uninstall). Connects to the hosted Finch MCP server.",
+  "displayName": "Finch",
+  "version": "0.3.10",
+  "description": "Edit your live site in the browser, then let Claude make the changes in your code. /finch-install puts Finch on your site, /finch-apply makes the changes you approved on a branch, merges, deploys and reports back, and /finch-uninstall takes Finch off again. Connects to the hosted Finch server.",
   "author": {
     "name": "Finch",
+    "email": "hello@finchnotes.co",
     "url": "https://finchnotes.co"
   },
   "homepage": "https://finchnotes.co",
-  "keywords": ["feedback", "review", "design", "prototype", "visual-edits"]
+  "repository": "https://github.com/usefinch/notes",
+  "keywords": ["feedback", "review", "design", "visual-editing", "website", "deploy"],
+  "icon": "./logo.png",
+  "documentationUrl": "https://github.com/usefinch/notes#readme",
+  "supportUrl": "https://finchnotes.co/support",
+  "privacyPolicyUrl": "https://finchnotes.co/privacy",
+  "termsOfServiceUrl": "https://finchnotes.co/terms"
 }

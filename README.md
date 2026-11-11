@@ -9,28 +9,30 @@ Edit your live site in the browser, then let Claude make the changes in your cod
 In Claude Code:
 
 ```
-/plugin marketplace add usefinch/notes
+/plugin install finch --marketplace usefinch/notes
 ```
 
-```
-/plugin install finch@finch
-```
-
-Then start a new session in your project.
+On Claude Code older than 2.1.292, run `/plugin marketplace add usefinch/notes` and then `/plugin install finch@finch`. Start a new session in your project afterwards.
 
 ## Use
 
-1. **`/finch-install`** in your project. It signs you in with Google (once), creates your Finch project, adds the Finch script with editing turned on, sets up git if needed, and redeploys if it's an [Ample](https://ample.computer) app.
-2. **Open your live site** and click **Edit** on the right edge. Make changes, or type what you'd change.
-3. **Click Apply changes**, then run **`/finch-apply`** in Claude Code. Claude applies everything, deploys, and the page reloads into the live site.
+1. **`/finch-install`** in your project. It signs you in with Google (once), creates your Finch site, adds the Finch script with editing turned on, sets up git if needed, and redeploys if it's an [Ample](https://ample.computer) app. It works with plain HTML, React with Vite, Next.js, Nuxt and Astro.
+2. **Open your live site** and click **Edit** on the right edge. Make changes, or type what you'd change. Share the review link so others can suggest changes.
+3. **Click Apply changes**, then run **`/finch-apply`** in Claude Code. Claude applies everything on a new branch (one commit per change), merges, deploys, and the page reloads into the live site.
 
 To take Finch off a project, run **`/finch-uninstall`**. It removes the script and config, and asks whether to delete the site from Finch and disconnect your computer too.
 
 ## What's in here
 
-- `plugin/skills/finch-install` — sets Finch up in a project
-- `plugin/skills/finch-apply` — applies the changes queued from the Apply button
-- `plugin/skills/finch-uninstall` — takes Finch off a project
-- `plugin/.mcp.json` — connects Claude Code to the hosted Finch server, using the key `/finch-install` saves to `~/.finch/credentials`
+- `plugin/skills/finch-install`: sets Finch up in a project
+- `plugin/skills/finch-apply`: applies the changes queued from the Apply button
+- `plugin/skills/finch-uninstall`: takes Finch off a project
+- `plugin/.mcp.json`: connects Claude Code to the hosted Finch server, using the key `/finch-install` saves to `~/.finch/credentials` on your computer
 
-Questions or problems: [finchnotes.co](https://finchnotes.co)
+## Your data
+
+Finch keeps your sign-in, your sites, and the notes and changes people leave on them. Your code stays on your computer and in your own git repository; Finch never receives it. See the [privacy policy](https://finchnotes.co/privacy) and [terms](https://finchnotes.co/terms).
+
+## Help
+
+Questions or problems: [finchnotes.co/support](https://finchnotes.co/support) or hello@finchnotes.co.

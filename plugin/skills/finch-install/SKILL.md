@@ -33,12 +33,12 @@ python3 "${CLAUDE_SKILL_DIR}/finch_auth.py"
 
 It reuses the saved session (`~/.finch-session.json`) or refreshes it, and only opens the browser for Google sign-in on finchnotes.co when neither works — tell the user to finish signing in there; the script waits up to 5 minutes. It also creates the Finch API key the plugin's connection needs and saves it to `~/.finch/credentials`, so nobody has to run `npx finch login`. (`npx finch` is not our package on npm — never suggest it.)
 
-It prints one line of JSON: `email`, `user_id`, `name` (from Google) and `apiKey` (`existing` or `created`). The raw API key is never printed — don't read or print `~/.finch/credentials` either.
+It prints one line of JSON: `email`, `user_id`, `name` (from Google) and `apiKey` (`existing`, `created`, or `replaced` when the saved key had expired or been disconnected). The raw API key is never printed — don't read or print `~/.finch/credentials` either.
 
 - Keep `user_id` for Step 5 and the owner's first name (first word of `name`, or the part of `email` before `@`, capitalised) for Step 6.
 - For Step 5 you also need the access token: read `access_token` from `~/.finch-session.json`.
 - If the script exits with an error, show it and stop.
-- If `apiKey` is `created`, the plugin's **finch** connection was started before the key existed: tell the user at the end to reconnect **finch** from `/mcp` (or start a new session) before running `/finch-apply`.
+- If `apiKey` is `created` or `replaced`, the plugin's **finch** connection was started before the key existed: tell the user at the end to reconnect **finch** from `/mcp` (or start a new session) before running `/finch-apply`.
 
 ---
 
@@ -362,7 +362,7 @@ The `ask` rules are the safety net for `/finch-apply`: ordinary changes to pages
 
 Write it with the Write/Edit tools (create `.claude/` if needed). Claude Code shows these rules in its trust prompt the next time the folder is opened; that one approval covers every Finch tool call from then on.
 
-**API key check:** Step 1 already made sure `~/.finch/credentials` has a key. If it reported `apiKey: created`, the user must reconnect **finch** from `/mcp` (or open a new session) before `/finch-apply` will see the Finch tools — say so in the report.
+**API key check:** Step 1 already made sure `~/.finch/credentials` has a key. If it reported `apiKey: created` or `replaced`, the user must reconnect **finch** from `/mcp` (or open a new session) before `/finch-apply` will see the Finch tools — say so in the report.
 
 ---
 

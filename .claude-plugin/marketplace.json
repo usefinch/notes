@@ -5,13 +5,13 @@
     "url": "https://finchnotes.co"
   },
   "metadata": {
-    "description": "Finch — visual feedback and visual edits for prototypes, closed back into Claude Code."
+    "description": "Finch: edit your live site in the browser, then let Claude make the changes in your code."
   },
   "plugins": [
     {
       "name": "finch",
       "source": "./plugin",
-      "description": "Finch visual feedback: /finch-install sets a prototype up for comments and visual edits; /finch-apply applies the changes queued from Finch's Apply button; /finch-uninstall takes it off again."
+      "description": "Edit your live site in the browser, then let Claude make the changes in your code. /finch-install puts Finch on your site, /finch-apply ships the changes you approved, /finch-uninstall takes it off again."
     }
   ]
 }

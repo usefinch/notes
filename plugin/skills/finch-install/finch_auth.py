@@ -5,7 +5,7 @@
   and only opens the browser (Google sign-in on finchnotes.co) when neither works.
 - Creates a Finch API key when ~/.finch/credentials has none, and saves it there
   (mode 600) for the Finch plugin's MCP connection. The raw key is never printed.
-- Prints one line of JSON: {"email", "user_id", "name", "apiKey": "existing"|"created"}.
+- Prints one line of JSON: {"email", "user_id", "name", "apiKey": "existing"|"created"|"replaced"}.
   The access token for creating the project stays in ~/.finch-session.json.
 
 Standard library only.
@@ -38,6 +38,24 @@ def request(method, path, token=None, body=None, extra=None):
             return res.status, (json.loads(text) if text else None)
     except urllib.error.HTTPError as e:
         return e.code, e.read().decode()
+
+
+def key_still_works(raw):
+    """False only when the Finch server says the saved key is no longer accepted (expired or
+    disconnected). Any other outcome, including no network, counts as "works" so we never make a
+    second key by mistake."""
+    req = urllib.request.Request(
+        SUPABASE_URL + '/functions/v1/finch-mcp',
+        data=json.dumps({'jsonrpc': '2.0', 'id': 1, 'method': 'tools/list'}).encode(),
+        headers={'Authorization': 'Bearer ' + raw, 'Content-Type': 'application/json', 'apikey': ANON_KEY},
+        method='POST')
+    try:
+        with urllib.request.urlopen(req, timeout=15):
+            return True
+    except urllib.error.HTTPError as e:
+        return e.code != 401
+    except Exception:
+        return True
 
 
 def write_private(path, obj):
@@ -156,6 +174,10 @@ def main():
 
     creds = load_json(CRED_FILE) or {}
     api_key_state = 'existing'
+    if creds.get('apiKey') and not key_still_works(creds['apiKey']):
+        log('The saved Finch key has expired or was disconnected, making a new one.')
+        creds.pop('apiKey', None)
+        api_key_state = 'replaced'
     if not creds.get('apiKey'):
         raw = 'fnk_' + secrets.token_hex(32)
         status, data = request('POST', '/rest/v1/api_keys', token=session['access_token'],
@@ -167,7 +189,7 @@ def main():
             sys.exit(f'Could not create a Finch API key ({status}): {data}')
         creds['apiKey'] = raw
         write_private(CRED_FILE, creds)
-        api_key_state = 'created'
+        api_key_state = 'created' if api_key_state != 'replaced' else 'replaced'
 
     print(json.dumps({'email': user.get('email', ''), 'user_id': user['id'],
                       'name': name, 'apiKey': api_key_state}))
