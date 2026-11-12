@@ -1,7 +1,7 @@
 ---
 name: finch-uninstall
 description: Take Finch off a project — removes the Finch script and config that /finch-install added (script tag, .finch, the Finch permissions in .claude/settings.json, vite-plugin-finch), commits, redeploys Ample apps, and optionally deletes the site from Finch and disconnects this computer. Use when the user says "uninstall Finch", "remove Finch", "take Finch off this site" or runs /finch-uninstall.
-allowed-tools: Read Edit Write Grep Glob AskUserQuestion Bash(ls *) Bash(python3 *finch_uninstall.py*) Bash(rm .finch) Bash(git rm .finch) Bash(git rev-parse *) Bash(git ls-files *) Bash(git status *) Bash(git log *) Bash(git add *) Bash(git commit *) Bash(ample up) Bash(npm uninstall vite-plugin-finch) Bash(pnpm remove vite-plugin-finch) Bash(yarn remove vite-plugin-finch) Bash(bun remove vite-plugin-finch)
+allowed-tools: Read Edit Write Grep Glob AskUserQuestion Bash(ls *) Bash(python3 *finch_uninstall.py*) Bash(python *finch_uninstall.py*) Bash(py -3 *finch_uninstall.py*) Bash(rm .finch) Bash(git rm .finch) Bash(git rev-parse *) Bash(git ls-files *) Bash(git status *) Bash(git log *) Bash(git add *) Bash(git commit *) Bash(ample up) Bash(npm uninstall vite-plugin-finch) Bash(pnpm remove vite-plugin-finch) Bash(yarn remove vite-plugin-finch) Bash(bun remove vite-plugin-finch)
 ---
 
 The user wants Finch off this project. Undo what `/finch-install` did, and only that: leave the rest of the project exactly as it was.
@@ -99,7 +99,7 @@ git commit -m "Remove Finch" -- <files>
 Run once, with only the flags they said yes to:
 
 ```bash
-python3 "${CLAUDE_SKILL_DIR}/finch_uninstall.py" --delete-project {prototypeId} --disconnect
+python3 "${CLAUDE_SKILL_DIR}/finch_uninstall.py" --delete-project {prototypeId} --disconnect   # if python3 isn't found, use python or py -3
 ```
 
 It signs in like `/finch-install` (the browser opens only if the saved session has expired — tell the user to finish signing in there). It prints one line of JSON:

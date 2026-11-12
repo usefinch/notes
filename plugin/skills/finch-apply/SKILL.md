@@ -14,7 +14,7 @@ The owner accepted these changes and pressed Apply; what they expect is to see t
 
 ## Step 1 — Check the Finch tools are available
 
-You need the Finch MCP tools `claim_apply_request` and `complete_apply_request` — they come with the Finch plugin (or a project `.mcp.json` `finch` server). If they're missing or the server failed to connect, stop and tell the user: most often there's no Finch API key yet — run `/finch-install` (it signs in and saves the key), then reconnect **finch** from `/mcp`. Don't fall back to editing without a claimed request.
+You need the Finch MCP tools `claim_apply_request` and `complete_apply_request` — they come with the Finch plugin (or a project `.mcp.json` `finch` server). If they're missing or the server failed to connect, stop and tell the user: most often there's no Finch API key yet — run `/finch-install` (it signs in and saves the key), then start a new Claude Code session (if Finch still isn't connected there, fully quit Claude and open it again — on Windows, closing the window leaves it running: right-click the Claude icon by the clock and choose Quit). A "Dynamic Client Registration" / 404 error means the same thing: no key yet. If the key exists and it still fails, check Python runs (`python3`, `python` or `py -3`); the connection needs one of them. Don't fall back to editing without a claimed request.
 
 ## Step 2 — Find this project
 
@@ -136,6 +136,7 @@ Finch marks applied threads done (with a reply naming the branch) and reopens co
 **Deploy the site** — the first of these that fits the repo:
 1. `.finch` has a `deployCommand` → run exactly that (only if `.finch` wasn't changed by this apply; if it was, Step 7b already asked the owner).
 2. `ample.toml` at the root → `ample up`
+2b. `.finch` has `ampleApp`, or `ample.toml` is there but the `ample` command isn't installed → deploy the changed files to that **existing** Ample app with the Ample connector's tools (never create a new app). If the connector isn't in this session, tell the user to add the Ample connector or install the Ample command-line tool, and report the deploy as failed.
 3. `.vercel/project.json` (linked with the Vercel CLI) → `vercel --prod --yes`
 4. The host deploys on push (Vercel / Netlify / Cloudflare Pages connected to the GitHub repo, or the project's README says so) → `git push origin <main>`
 5. None of these → ask the user once how the site is deployed, run it, and save it as `"deployCommand"` in `.finch` so later applies just run it.

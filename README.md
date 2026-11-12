@@ -6,7 +6,13 @@ Finch lets people suggest edits right on your live website; you approve them, an
 
 ## Install
 
-In Claude Code:
+You need Claude Code, which comes with a paid Claude plan (Pro or higher). Paste this into Claude Code (works in the desktop app and the terminal):
+
+```
+Install the Finch plugin from github.com/usefinch/notes, then help me set it up on my site.
+```
+
+Or, in the Claude Code terminal:
 
 ```
 /plugin install finch --marketplace usefinch/notes
@@ -16,7 +22,7 @@ On Claude Code older than 2.1.292, run `/plugin marketplace add usefinch/notes` 
 
 ## Use
 
-1. **`/finch-install`** in your project. It signs you in with Google (once), creates your Finch site, adds the Finch script with editing turned on, sets up git if needed, and redeploys if it's an [Ample](https://ample.computer) app. It works with plain HTML, React with Vite, Next.js, Nuxt and Astro.
+1. **`/finch-install`** in your project. It signs you in with Google (once), creates your Finch site, adds the Finch script with editing turned on, sets up git if needed, and redeploys if it's an [Ample](https://ample.computer) app. It works with plain HTML, React with Vite, Next.js, Nuxt and Astro, including sites that live only on Ample.
 2. **Open your live site** and click **Edit** on the right edge. Make changes, or type what you'd change. Share the review link so others can suggest changes.
 3. **Click Apply changes**, then run **`/finch-apply`** in Claude Code. Claude applies everything on a new branch (one commit per change), merges, deploys, and the page reloads into the live site.
 

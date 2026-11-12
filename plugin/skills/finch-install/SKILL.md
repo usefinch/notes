@@ -1,7 +1,7 @@
 ---
 name: finch-install
 description: Set up Finch in a project so its owner can edit the live site in the browser — signs in with Google (and creates the Finch API key), detects the framework, creates the Finch project, injects the script with live editing on, adds the source plugin for React+Vite, writes the .finch config, pre-approves the Finch tools, makes sure the project is in git, and deploys Ample apps with `ample up`. Use when the user says "install Finch", "set up Finch", "add Finch to this site" or runs /finch-install.
-allowed-tools: mcp__plugin_finch_finch__* Read Edit Write Grep Glob Bash(ls *) Bash(python3 *finch_auth.py*) Bash(cat ~/.finch-session.json) Bash(git rev-parse *) Bash(git init *) Bash(git status *) Bash(git log *) Bash(git add *) Bash(git commit *) Bash(git rm --cached *) Bash(ample up) Bash(date *) Bash(python3 -c "import uuid; print(uuid.uuid4())") Bash(npm install -D vite-plugin-finch) Bash(pnpm add -D vite-plugin-finch) Bash(yarn add -D vite-plugin-finch) Bash(bun add -d vite-plugin-finch)
+allowed-tools: mcp__plugin_finch_finch__* Read Edit Write Grep Glob Bash(ls *) Bash(python3 *finch_auth.py*) Bash(python *finch_auth.py*) Bash(py -3 *finch_auth.py*) Bash(python3 --version) Bash(python --version) Bash(py -3 --version) Bash(pwd) Bash(cat ~/.finch-session.json) Bash(git rev-parse *) Bash(git init *) Bash(git status *) Bash(git log *) Bash(git add *) Bash(git commit *) Bash(git rm --cached *) Bash(ample up) Bash(date *) Bash(python3 -c "import uuid; print(uuid.uuid4())") Bash(python -c "import uuid; print(uuid.uuid4())") Bash(py -3 -c "import uuid; print(uuid.uuid4())") Bash(npm install -D vite-plugin-finch) Bash(pnpm add -D vite-plugin-finch) Bash(yarn add -D vite-plugin-finch) Bash(bun add -d vite-plugin-finch)
 ---
 
 The user wants to install Finch in their project.
@@ -23,12 +23,37 @@ Use these directly. Do not look for any `.env` file.
 
 ---
 
+## Step 0 — Before you start
+
+Many people running this aren't developers and may be on Windows in the Claude desktop app. Check these first, in plain words, and fix them with the user before anything else.
+
+**Python.** The sign-in script needs Python 3, and the plugin's connection uses it to read the key. On Windows `python3` is often a Microsoft Store shortcut that prints "Python was not found". Run these one at a time and use the first that prints `Python 3.x` — call it **PY** for the rest of this skill:
+
+```bash
+python3 --version
+```
+```bash
+python --version
+```
+```bash
+py -3 --version
+```
+
+The plugin's connection tries `python3`, then `python`, then `py -3` on its own, so any one working is enough — don't build shims or edit PATH. If none works, tell the user Finch needs Python for sign-in and offer to install it (Windows: `winget install -e --id Python.Python.3.13 --scope user`, no admin needed; Mac: `xcode-select --install`). After installing, they need to fully quit and reopen Claude so it sees Python, then run `/finch-install` again.
+
+**A real project folder.** Run `pwd`. If it's a temporary folder (under `/tmp`, `/var/folders`, `AppData\Local\Temp`, or a folder the desktop app made for this session) or has no site files in it, stop here — anything set up there is lost with the session, and long temp paths break git on Windows. Find where the site lives:
+- **On this computer:** ask the user, then move the session there (in the desktop app you can switch this session's folder; otherwise ask them to open a new session in that folder and run `/finch-install` again).
+- **Only on Ample** (built in Claude chat and put live with the Ample connector, so it was never saved locally): if the Ample connector's tools are in this session, find the app in their account, get its source files and save them into a new folder in the user's Documents named after the app, then move the session there. Remember the Ample app's name as **ampleApp** for Step 7 and Step 10. Never create a second Ample app.
+- **Somewhere else** (another host, no source anywhere): explain Finch needs the site's source code, and stop.
+
+---
+
 ## Step 1 — Sign in to Finch
 
 Run the sign-in script that ships with this skill:
 
 ```bash
-python3 "${CLAUDE_SKILL_DIR}/finch_auth.py"
+python3 "${CLAUDE_SKILL_DIR}/finch_auth.py"   # use PY from Step 0, e.g. python or py -3
 ```
 
 It reuses the saved session (`~/.finch-session.json`) or refreshes it, and only opens the browser for Google sign-in on finchnotes.co when neither works — tell the user to finish signing in there; the script waits up to 5 minutes. It also creates the Finch API key the plugin's connection needs and saves it to `~/.finch/credentials`, so nobody has to run `npx finch login`. (`npx finch` is not our package on npm — never suggest it.)
@@ -38,7 +63,7 @@ It prints one line of JSON: `email`, `user_id`, `name` (from Google) and `apiKey
 - Keep `user_id` for Step 5 and the owner's first name (first word of `name`, or the part of `email` before `@`, capitalised) for Step 6.
 - For Step 5 you also need the access token: read `access_token` from `~/.finch-session.json`.
 - If the script exits with an error, show it and stop.
-- If `apiKey` is `created` or `replaced`, the plugin's **finch** connection was started before the key existed: tell the user at the end to reconnect **finch** from `/mcp` (or start a new session) before running `/finch-apply`.
+- If `apiKey` is `created` or `replaced`, the plugin's **finch** connection was started before the key existed (it may have shown a "Dynamic Client Registration" / 404 error — that's only the missing key, not a problem). Tell the user at the end to start a new Claude Code session (if Finch still isn't connected there, fully quit Claude and open it again — on Windows, closing the window leaves it running: right-click the Claude icon by the clock and choose Quit) before running `/finch-apply`.
 
 ---
 
@@ -97,6 +122,7 @@ Only a regular file counts. `~/.finch/` in the home folder is a **folder** (Step
 ```bash
 python3 -c "import uuid; print(uuid.uuid4())"
 ```
+(With PY from Step 0.)
 Use this as `prototypeId`. Do NOT slugify the project name — human-readable slugs are guessable.
 
 **Detect base URL** (needed for project creation):
@@ -333,6 +359,8 @@ Write a `.finch` file at the current working directory (project root):
 }
 ```
 
+If Step 0 found the site only on Ample, add `"ampleApp": "{ampleApp}"` so `/finch-apply` deploys to that same app through the Ample connector.
+
 If `.finch` already existed (step 4 found it), skip this step — don't overwrite.
 
 ---
@@ -360,9 +388,9 @@ Add a project permission so the Finch tools never prompt in this repo. Read `.cl
 
 The `ask` rules are the safety net for `/finch-apply`: ordinary changes to pages, styles and copy still go through with no prompt, but a change to the package file, build or deploy config, environment files or CI stops and asks the owner first. Reviewers' text can't talk Claude out of this, because Claude Code enforces it, not the model. Merge them into any existing `ask` list; don't remove rules the project already has. (Git and `.claude/` are protected by Claude Code already.)
 
-Write it with the Write/Edit tools (create `.claude/` if needed). Claude Code shows these rules in its trust prompt the next time the folder is opened; that one approval covers every Finch tool call from then on.
+Write it with the Write/Edit tools (create `.claude/` if needed). If Claude Code refuses to write it, skip this step, say Finch's tools will ask for approval the first time, and carry on. Claude Code shows these rules in its trust prompt the next time the folder is opened; that one approval covers every Finch tool call from then on.
 
-**API key check:** Step 1 already made sure `~/.finch/credentials` has a key. If it reported `apiKey: created` or `replaced`, the user must reconnect **finch** from `/mcp` (or open a new session) before `/finch-apply` will see the Finch tools — say so in the report.
+**API key check:** Step 1 already made sure `~/.finch/credentials` has a key. If it reported `apiKey: created` or `replaced`, the user must start a new Claude Code session (if Finch still isn't connected there, fully quit Claude and open it again — on Windows, closing the window leaves it running: right-click the Claude icon by the clock and choose Quit) before `/finch-apply` will see the Finch tools — say so in the report.
 
 ---
 
@@ -409,7 +437,8 @@ The overlay only shows up where the new script is deployed.
   ```bash
   curl -s -X PATCH '{SUPABASE_URL}/rest/v1/projects?prototype_id=eq.{prototypeId}' -H 'apikey: {SUPABASE_ANON_KEY}' -H 'Authorization: Bearer {access_token}' -H 'Content-Type: application/json' -d '{"base_url": "{liveUrl}"}'
   ```
-  If `ample up` fails, show the error and carry on to the report — setup is done, only the deploy needs another try.
+  If `ample up` fails, show the error and carry on to the report — setup is done, only the deploy needs another try. If the `ample` command isn't installed and the Ample connector's tools are in this session, deploy through the connector instead (next bullet).
+- **ampleApp from Step 0** (the site lives only on Ample), or `ample up` isn't available: deploy the changed files to that **existing** app with the Ample connector's tools, so the address stays the same — never create a new app. Set `base_url` as above if it's missing. Then open the live site and check Finch's script loads.
 - **Anything else:** don't deploy. Tell the user to deploy the way they usually do (Vercel / Netlify / `git push`), and that `/finch-apply` will ask once how the site deploys and remember it.
 
 ---
@@ -440,7 +469,7 @@ Next steps:
 
 If show is `link`, add a line `Shows: only with a review link (visitors never see Finch)` to the summary, and make next step 1 "Open https://my-app.ample.run/?finch and click Edit on the right edge — the ?finch is what shows Finch; send that same link to anyone you want feedback from (or copy it from finchnotes.co/app)."
 
-If Step 1 created the API key, add before the next steps: "Reconnect **finch** from `/mcp` (or open a new session) so `/finch-apply` can see your Finch tools." If the site wasn't deployed (no `ample.toml`), step 1 becomes "Deploy the site the way you usually do, then open it…".
+If Step 1 created the API key, add before the next steps: "Start a new Claude Code session (if Finch still isn't connected there, fully quit Claude and open it again — on Windows, closing the window leaves it running: right-click the Claude icon by the clock and choose Quit) so `/finch-apply` can see your Finch tools." If the site wasn't deployed (no `ample.toml`), step 1 becomes "Deploy the site the way you usually do, then open it…".
 
 If anything failed (e.g. project creation errored, no HTML file found), report the error clearly and note which steps succeeded and which need manual attention. A partial setup is better than a hard stop.
 
