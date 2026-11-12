@@ -9,7 +9,7 @@ Finch lets people suggest edits right on your live website; you approve them, an
 Paste this into Claude Code (works in the desktop app and the terminal):
 
 ```
-Install the Finch plugin from github.com/usefinch/notes, then help me set it up on my site.
+Add the Claude Code plugin finch@finch from the GitHub marketplace usefinch/notes (put it in my Claude Code settings if /plugin isn’t available here), then tell me how to load it and run /finch-install on this site.
 ```
 
 Or, in the Claude Code terminal:

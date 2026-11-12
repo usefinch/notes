@@ -1,7 +1,7 @@
 {
   "name": "finch",
   "displayName": "Finch",
-  "version": "0.3.12",
+  "version": "0.3.13",
   "description": "Finch lets people suggest edits right on your live website; you approve them, and Claude Code puts them live. /finch-install puts Finch on your site, /finch-apply makes the changes you approved on a branch, merges, deploys and reports back, and /finch-uninstall takes Finch off again.",
   "author": {
     "name": "Finch",

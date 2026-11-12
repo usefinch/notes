@@ -443,7 +443,15 @@ The overlay only shows up where the new script is deployed.
 
 ---
 
-## Step 11 — Report results
+## Step 11 — Open the dashboard, then report
+
+Install signed in Claude Code, not the browser tab with the site, so the editor there would ask the owner to sign in again. Open the Finch dashboard with this site first; its **Open and edit** button opens the site already signed in:
+
+```bash
+python3 "${CLAUDE_SKILL_DIR}/finch_auth.py" --open-site {prototypeId}   # use PY from Step 0
+```
+
+Then report:
 
 Print a clear summary:
 
@@ -461,15 +469,16 @@ Git: new repo, first commit made ✓
 Deployed: https://my-app.ample.run ✓
 
 Next steps:
-  1. Open https://my-app.ample.run and click Edit on the right edge.
+  1. Your Finch dashboard just opened with this site at the top. Press Open and edit:
+     it opens https://my-app.ample.run with the editor on, already signed in.
   2. Change anything — text, colours, spacing, layout. It previews as you go.
   3. Click Apply changes, then come back here and run /finch-apply.
      Claude makes the changes, deploys, and the page reloads into the live site.
 ```
 
-If show is `link`, add a line `Shows: only with a review link (visitors never see Finch)` to the summary, and make next step 1 "Open https://my-app.ample.run/?finch and click Edit on the right edge — the ?finch is what shows Finch; send that same link to anyone you want feedback from (or copy it from finchnotes.co/app)."
+If show is `link`, add a line `Shows: only with a review link (visitors never see Finch)` to the summary, and add to next step 1: "Open and edit adds the ?finch that shows Finch; to get feedback, use Copy review link on the dashboard and send that."
 
-If Step 1 created the API key, add before the next steps: "Start a new Claude Code session (if Finch still isn't connected there, fully quit Claude and open it again — on Windows, closing the window leaves it running: right-click the Claude icon by the clock and choose Quit) so `/finch-apply` can see your Finch tools." If the site wasn't deployed (no `ample.toml`), step 1 becomes "Deploy the site the way you usually do, then open it…".
+If Step 1 created the API key, add before the next steps: "Start a new Claude Code session (if Finch still isn't connected there, fully quit Claude and open it again — on Windows, closing the window leaves it running: right-click the Claude icon by the clock and choose Quit) so `/finch-apply` can see your Finch tools." If the site wasn't deployed (no `ample.toml`), step 1 becomes "Deploy the site the way you usually do, then press Open and edit on the dashboard (add the site's address in its settings first if it shows none)."
 
 If anything failed (e.g. project creation errored, no HTML file found), report the error clearly and note which steps succeeded and which need manual attention. A partial setup is better than a hard stop.
 

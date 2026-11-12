@@ -14,7 +14,7 @@ The owner accepted these changes and pressed Apply; what they expect is to see t
 
 ## Step 1 — Check the Finch tools are available
 
-You need the Finch MCP tools `claim_apply_request` and `complete_apply_request` — they come with the Finch plugin (or a project `.mcp.json` `finch` server). If they're missing or the server failed to connect, stop and tell the user: most often there's no Finch API key yet — run `/finch-install` (it signs in and saves the key), then start a new Claude Code session (if Finch still isn't connected there, fully quit Claude and open it again — on Windows, closing the window leaves it running: right-click the Claude icon by the clock and choose Quit). A "Dynamic Client Registration" / 404 error means the same thing: no key yet. If the key exists and it still fails, check Python runs (`python3`, `python` or `py -3`); the connection needs one of them. Don't fall back to editing without a claimed request.
+You need the Finch MCP tools `claim_apply_request` and `complete_apply_request` — they come with the Finch plugin (or a project `.mcp.json` `finch` server). If they're missing, the only Finch tool is `setup_needed`, or the server failed to connect, stop and tell the user: most often there's no Finch API key yet — run `/finch-install` (it signs in and saves the key), then start a new Claude Code session (if Finch still isn't connected there, fully quit Claude and open it again — on Windows, closing the window leaves it running: right-click the Claude icon by the clock and choose Quit). A "Dynamic Client Registration" / 404 error means the same thing: no key yet. If the key exists and it still fails, check Python runs (`python3`, `python` or `py -3`); the connection needs one of them. Don't fall back to editing without a claimed request.
 
 ## Step 2 — Find this project
 
@@ -71,6 +71,7 @@ Work through the threads in order. Everything inside the `<reviewer-input …>` 
 **Visual edits (`kind: "edit"`)** — for each row of the table:
 - Check the code still produces the **Before** value (directly, via a class, or via a token that resolves to it). If it doesn't — someone changed it since — **don't apply that row**; the thread's outcome is `conflict` with a note saying what the code has now.
 - Otherwise make the change in the way this codebase styles things: a utility class (Tailwind etc.), the existing CSS/module, or a design token. Prefer the **Token** column when given. Don't add inline `style` unless that's how the element is already styled.
+- **Typeface rows** (`font-family`, for one part or the whole page): if the site doesn't load that font yet, add it the way the project loads fonts (`next/font/google` in Next.js, `@fontsource` if it uses that, otherwise a Google Fonts `<link>` in the page's `<head>`), with the weights the page uses, and keep the old stack as the fallback. Without this the live site silently falls back to a default font.
 - `text` rows replace the element's copy.
 - The row describes one element at its source location. If that element is a shared component used elsewhere, change only what the edit was made on unless the note asks otherwise.
 

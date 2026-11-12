@@ -102,9 +102,10 @@ def refresh(session):
 
 
 def browser_sign_in():
-    s = socket.socket(); s.bind(('localhost', 0)); port = s.getsockname()[1]; s.close()
+    s = socket.socket(); s.bind(('127.0.0.1', 0)); port = s.getsockname()[1]; s.close()
     state = secrets.token_urlsafe(16)
-    url = f'{DASHBOARD_URL}/auth/cli?port={port}&state={urllib.parse.quote(state)}'
+    # 127.0.0.1, not localhost: some Windows PCs try IPv6 first for localhost and wait for it to time out
+    url = f'{DASHBOARD_URL}/auth/cli?port={port}&host=127.0.0.1&state={urllib.parse.quote(state)}'
     holder = {}
 
     class Handler(BaseHTTPRequestHandler):
@@ -139,7 +140,7 @@ def browser_sign_in():
         def log_message(self, *a):
             pass
 
-    server = HTTPServer(('localhost', port), Handler)
+    server = HTTPServer(('127.0.0.1', port), Handler)
     server.timeout = 300
     log('Opening your browser to sign in to Finch with Google...')
     log('If it does not open, visit:\n  ' + url)
@@ -195,5 +196,19 @@ def main():
                       'name': name, 'apiKey': api_key_state}))
 
 
+def open_dashboard(prototype_id):
+    # End of /finch-install: open the dashboard with this site first, where Open and edit signs the
+    # editor in on the site. Only a Finch dashboard address is ever opened.
+    pid = prototype_id.strip()
+    if not pid or not all(c.isalnum() or c == '-' for c in pid):
+        sys.exit('Not a Finch site id: ' + prototype_id)
+    url = f'{DASHBOARD_URL}/app?site={pid}'
+    webbrowser.open(url)
+    print(json.dumps({'opened': url}))
+
+
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) == 3 and sys.argv[1] == '--open-site':
+        open_dashboard(sys.argv[2])
+    else:
+        main()
